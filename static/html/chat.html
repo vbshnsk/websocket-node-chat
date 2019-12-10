@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Chat</title>
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+        <div class="container">
+            <div id="chat-window" class="flex-3">
+                <div id="chat">
+                    <div id="message-container">
+                        <h3 class="username"> AutoUser </h3>
+                        <p class="message"> Welcome! </p>
+                        <p class="date"></p>
+                    </div>
+                </div>
+                <div class="message-form" method="POST">
+                    <textarea id="message" maxlength="140" placeholder="Your message"></textarea>
+                    <button id="send" class="button centered"> Send
+                </div>
+            </div>
+            <div id="users" class="flex-1">
+
+            </div>
+        </div>
+    </body>
+    <script src="/js/chat.js"></script> 
+</html>
