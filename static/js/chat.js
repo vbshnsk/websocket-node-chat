@@ -1,4 +1,4 @@
-const ws = new WebSocket('ws://' + location.hostname + ':' + location.port + '/chat')
+const ws = new WebSocket('wss://' + location.hostname + ':' + location.port + '/chat')
 
 const parseData = data => {
     const parsedData = JSON.parse(data)
