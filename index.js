@@ -61,10 +61,12 @@ app.ws('/chat', (ws, req) => {
             message: message,
             date: new Date(),
         }
-        Message.create(data, (err, message) => {
-            const clients = expressWs.getWss('/chat').clients
-            clients.forEach(client => client.send(JSON.stringify(message)))
-        })
+        const clients = expressWs.getWss('/chat').clients
+        clients.forEach(client => client.send(JSON.stringify(message)))
+        // Message.create(data, (err, message) => {
+        //     const clients = expressWs.getWss('/chat').clients
+        //     clients.forEach(client => client.send(JSON.stringify(message)))
+        // })
     })
 })
 
