@@ -10,7 +10,8 @@ const MessageSchema = new mongoose.Schema({
         type: String
     },
     date: {
-        type: Date
+        type: Date,
+        index: { expires: '10m' },
     }
 })
 

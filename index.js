@@ -35,6 +35,8 @@ db.once('open', () => {
     console.log('Connected to the database.')
 })
 
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'pug')
 
 app.get('/', (req, res) => { 
     res.sendFile(path.join(__dirname, 'static/html/login.html'))
@@ -51,22 +53,30 @@ app.post('/', (req, res) => {
 })
 
 app.get('/chat', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static/html/chat.html'))
+    Message.find({ }, (err, messages) => {
+        res.render('chat', {messages: messages, client: req.session.username})
+    })
 })
 
 app.ws('/chat', (ws, req) => {
     ws.on('message', (message) => {
         const data = {
-            username: req.session.username,
+            username: req.session.username ? req.session.username : 'Guest',
             message: message,
             date: new Date(),
         }
         const clients = expressWs.getWss('/chat').clients
-        clients.forEach(client => client.send(JSON.stringify(data)))
-        // Message.create(data, (err, message) => {
-        //     const clients = expressWs.getWss('/chat').clients
-        //     clients.forEach(client => client.send(JSON.stringify(message)))
+        // clients.forEach(client => {
+        //     data.current = client === ws
+        //     client.send(JSON.stringify(data))
         // })
+        Message.create(data, (err, message) => {
+            const clients = expressWs.getWss('/chat').clients
+            clients.forEach(client =>{ 
+                data.current = client === ws
+                client.send(JSON.stringify(data))
+            })
+        })
     })
 })
 

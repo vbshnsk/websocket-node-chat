@@ -15,6 +15,11 @@
                         <p class="message"> Welcome! </p>
                         <p class="date"> 18 Aug 2001 </p>
                     </div>
+                    each message in messages 
+                        div(class="message-container " + (message.username === client ? 'sent' : 'recieved'))
+                            <h3 class="username"> #{message.username} </h3>
+                            <p class="message"> #{message.message} </p>
+                            <p class="date"> #{message.date} </p>
                 </div>
                 <textarea id="message" maxlength="140" placeholder="Your message"></textarea>
                 <button id="send" class="button"> Send
