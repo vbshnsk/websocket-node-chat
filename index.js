@@ -24,7 +24,8 @@ app.use(session({
     saveUninitialized: 'false',
 }))
 
-mongoose.connect('mongodb://localhost:27017/chat', {useNewUrlParser: true})
+//mongoose.connect('mongodb://localhost:27017/chat', {useNewUrlParser: true})
+mongoose.connect('mongodb+srv://vlad:212121121989gasp@cluster0-lo97k.mongodb.net/chat?retryWrites=true&w=majority', {useNewUrlParser: true})
 const db = mongoose.connection
 
 db.on('error', (error) =>{
