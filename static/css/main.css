@@ -25,6 +25,22 @@ body{
     align-self: center;
 }
 
+form{
+    height: fit-content;
+    align-self: center;
+    padding: 30px;
+}
+
+form input {
+    background-color: #ADD3EA;
+    border: none;
+    border-radius: 15px;
+    height: 40px;
+    padding: 10px;
+    font-size: 16px;
+
+}
+
 .window{
     border: #94C1DD solid 1px;
 }
