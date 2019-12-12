@@ -7,7 +7,8 @@ const session = require('express-session')
 const path = require('path')
 const bodyparser = require('body-parser')
 const mongoose = require('mongoose')
-const Message = require('./models')
+const Message = require('./models').Message
+const User = require('./models').User
 const MongoStore = require('connect-mongo')(session)
 
 const app = express()
@@ -29,7 +30,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
     cookie:{
-        maxAge: 60 * 1000,
+        maxAge: 60 * 60 * 1000,
     },
     store: new MongoStore({
         mongooseConnection: db,
@@ -50,30 +51,53 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 app.get('/', (req, res) => { 
-    res.sendFile(path.join(__dirname, 'static/html/login.html'))
+    if(req.session.username)
+        res.redirect('/chat')
+    else
+        res.sendFile(path.join(__dirname, 'static/html/login.html'))
+
 })
 
 app.post('/', (req, res) => {
-    if(req.body.username){
-        req.session.regenerate(err => {
-            req.session.username = req.body.username
-        req.session.save((err) => {
-            res.redirect('/chat')
-           })
+    User.findOne({ username: req.body.username }, (err, user) =>{
+        User.validate(user, req.body.password, (err, user) =>{
+            if(err)
+                res.redirect('/')
+            else {
+                req.session.username = user.username
+                res.redirect('/chat')
+            }
+        })
+    })
+})
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'static/html/register.html'))
+})
+
+app.post('/register', (req, res) =>{
+    if(req.body.password === req.body.passwordConfirmation){
+        const userData = {
+            username: req.body.username,
+            password: req.body.password,
+        }
+        User.create(userData, (err, user) =>{
+            if(err)
+                res.redirect('/register')
+            res.redirect('/')
         })
     }
     else{
-        res.redirect('/')
+        res.redirect('/register')
     }
 })
 
 app.get('/chat', (req, res) => {
-    Message.find({ }, (err, messages) => {
+    Message.find({ archived: false }, (err, messages) => {
         db.collection('sessions')
         .find({ })
         .map(document => JSON.parse(document.session).username).toArray()
         .then(users =>{
-            console.log(users)
             req.session.touch()
             res.render('chat', {messages: messages, client: req.session.username, users: users})
         })
@@ -89,11 +113,19 @@ app.ws('/chat', (ws, req) => {
         }
         Message.create(data, (err, message) => {
             const clients = expressWs.getWss('/chat').clients
+            Message.archiveAfter(message, 60000)
             clients.forEach(client =>{ 
                 data.current = client === ws
                 client.send(JSON.stringify(data))
             })
         })
+    })
+})
+
+app.get('/archive', (req, res) => {
+    Message.find({ archived: true }, (err, messages) =>{
+        console.log(messages)
+        res.render('archive', {messages: messages, client: req.session.username})
     })
 })
 

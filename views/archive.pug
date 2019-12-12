@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Chat</title>
+        <link rel="stylesheet" href="/css/main.css">
+        <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div id="chat-window" class="window">
+                <div id="chat">
+                <h1> Archive: </h1>
+                    if client
+                        each message in messages 
+                            div(class="message-container " + (message.username === client ? 'sent' : 'recieved'))
+                                <h3 class="username"> #{message.username} </h3>
+                                <p class="message"> #{message.message} </p>
+                                <p class="date"> #{message.date} </p>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="/js/chat.js"></script>
+</html>
