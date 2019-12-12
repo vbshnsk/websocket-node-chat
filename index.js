@@ -27,10 +27,9 @@ const db = mongoose.connection
 app.use(session({
     secret: 'chatting',
     resave: true,
-    rolling: true,
     saveUninitialized: true,
     cookie:{
-        maxAge: 60 * 60 * 1000,
+        maxAge: 60 * 1000,
     },
     store: new MongoStore({
         mongooseConnection: db,
@@ -73,6 +72,7 @@ app.get('/chat', (req, res) => {
         .map(document => JSON.parse(document.session).username).toArray()
         .then(users =>{
             console.log(users)
+            req.session.touch()
             res.render('chat', {messages: messages, client: req.session.username, users: users})
         })
     })
