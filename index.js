@@ -32,7 +32,6 @@ app.use(session({
     cookie:{
         maxAge: 60 * 60 * 1000,
     },
-    username: 'Guest',
     store: new MongoStore({
         mongooseConnection: db,
      }),
@@ -73,6 +72,7 @@ app.get('/chat', (req, res) => {
         .find({ })
         .map(document => JSON.parse(document.session).username).toArray()
         .then(users =>{
+            console.log(users)
             res.render('chat', {messages: messages, client: req.session.username, users: users})
         })
     })

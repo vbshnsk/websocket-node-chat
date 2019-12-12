@@ -40,6 +40,10 @@ ws.onmessage = event => {
     document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight
 }
 
+ws.onclose = event => {
+    console.log(event)
+}
+
 [...document.getElementsByClassName('date')].forEach(element => element.innerHTML = new Date(element.innerHTML).toLocaleString('en-GB'))
 
 document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight
