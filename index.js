@@ -33,7 +33,9 @@ app.use(session({
     },
     store: new MongoStore({
         mongooseConnection: db,
-     }),
+        autoRemove: 'interval',     
+        autoRemoveInterval: 1,
+        }),
 }))
 
 db.on('error', (error) =>{
