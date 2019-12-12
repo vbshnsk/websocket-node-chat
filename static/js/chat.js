@@ -1,4 +1,6 @@
-const ws = new WebSocket('wss://' + location.hostname + ':' + location.port + '/chat')
+const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
+
+const ws = new WebSocket(protocol + location.hostname + ':' + location.port + '/chat')
 
 const parseData = data => {
     const parsedData = JSON.parse(data)
@@ -35,7 +37,7 @@ document.getElementById('send').onclick = () => {
 ws.onmessage = event => {
     const message = parseData(event.data)
     document.getElementById('chat').appendChild(message)
-    document.getElementById('chat').scrollTop = document.getElementById('chat').clientHeight
+    document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight
 }
 
 [...document.getElementsByClassName('date')].forEach(element => element.innerHTML = new Date(element.innerHTML).toLocaleString('en-GB'))

@@ -30,7 +30,7 @@ app.use(session({
     rolling: true,
     saveUninitialized: true,
     cookie:{
-        maxAge: 60000,
+        maxAge: 60 * 60 * 1000,
     },
     username: 'Guest',
     store: new MongoStore({
