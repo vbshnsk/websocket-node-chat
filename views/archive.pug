@@ -9,8 +9,8 @@
     <body>
         <div class="container">
             <div id="chat-window" class="window">
+                <h1 id="archive-name"> Archive: </h1>
                 <div id="chat">
-                <h1> Archive: </h1>
                     if client
                         each message in messages 
                             div(class="message-container " + (message.username === client ? 'sent' : 'recieved'))

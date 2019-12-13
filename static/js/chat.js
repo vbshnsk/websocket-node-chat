@@ -44,14 +44,6 @@ wsChat.onclose = event => {
     console.log(event)
 }
 
-// wsLogin.onmessage = username => {
-//     const listElement = document.createElement('li')
-//     const user = document.createElement('h3')
-//     user.setAttribute('class', username)
-//     listElement.appendChild(user)
-//     document.getElementById('users-list').appendChild(listElement)
-// }
-
 [...document.getElementsByClassName('date')].forEach(element => element.innerHTML = new Date(element.innerHTML).toLocaleString('en-GB'))
 
 document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight

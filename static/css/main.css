@@ -80,6 +80,8 @@ form input {
 #users-window{
     width: 10%;
     background-color: #ADD3EA;
+    display: flex;
+    flex-direction: column;
 }
 
 #message{
@@ -139,4 +141,24 @@ form input {
     border: none;
     border-radius: 10px;
     font-size: 18px;
+}
+
+.description{
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+a #archive{
+    color: black;
+}
+
+.description a{
+    color: #94C1DD;
+}
+
+#archive{
+    justify-self: flex-end;
 }
