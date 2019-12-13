@@ -10,6 +10,8 @@ const mongoose = require('mongoose')
 const Message = require('./models').Message
 const User = require('./models').User
 const MongoStore = require('connect-mongo')(session)
+const EventEmitter =  require('events').EventEmitter
+const emmiter = new EventEmitter()
 
 const app = express()
 const expressWs = require('express-ws')(app)
@@ -21,8 +23,8 @@ app.use(bodyparser.urlencoded({
   }))
 
 
-//mongoose.connect('mongodb://localhost:27017/chat', {useNewUrlParser: true})
-mongoose.connect('mongodb+srv://vlad:212121121989gasp@cluster0-lo97k.mongodb.net/chat?retryWrites=true&w=majority', {useNewUrlParser: true})
+mongoose.connect('mongodb://localhost:27017/chat', {useNewUrlParser: true})
+//mongoose.connect('mongodb+srv://vlad:212121121989gasp@cluster0-lo97k.mongodb.net/chat?retryWrites=true&w=majority', {useNewUrlParser: true})
 const db = mongoose.connection
 
 app.use(session({
@@ -38,6 +40,7 @@ app.use(session({
         autoRemoveInterval: 1,
         }),
 }))
+
 
 db.on('error', (error) =>{
     console.log(error)
@@ -64,6 +67,7 @@ app.post('/', (req, res) => {
             if(err)
                 res.redirect('/')
             else {
+                emmiter.emit('loggedIn', user.username)
                 req.session.username = user.username
                 res.redirect('/chat')
             }
@@ -96,7 +100,7 @@ app.get('/chat', (req, res) => {
     Message.find({ archived: false }, (err, messages) => {
         db.collection('sessions')
         .find({ })
-        .map(document => JSON.parse(document.session).username).toArray()
+        .map(document => JSON.parse(document.session).username ? JSON.parse(document.session).username : 'Guest').toArray()
         .then(users =>{
             req.session.touch()
             res.render('chat', {messages: messages, client: req.session.username, users: users})
@@ -122,9 +126,13 @@ app.ws('/chat', (ws, req) => {
     })
 })
 
+app.get('/logout', (req, res) =>{
+    req.session.destroy()
+    res.redirect('/')
+})
+
 app.get('/archive', (req, res) => {
     Message.find({ archived: true }, (err, messages) =>{
-        console.log(messages)
         res.render('archive', {messages: messages, client: req.session.username})
     })
 })

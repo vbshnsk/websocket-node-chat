@@ -1,6 +1,6 @@
 const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
 
-const ws = new WebSocket(protocol + location.hostname + ':' + location.port + '/chat')
+const wsChat = new WebSocket(protocol + location.hostname + ':' + location.port + '/chat')
 
 const parseData = data => {
     const parsedData = JSON.parse(data)
@@ -31,18 +31,26 @@ const parseData = data => {
 document.getElementById('send').onclick = () => {
     const message = document.getElementById('message').value
     document.getElementById('message').value = ''
-    ws.send(message)
+    wsChat.send(message)
 } 
 
-ws.onmessage = event => {
+wsChat.onmessage = event => {
     const message = parseData(event.data)
     document.getElementById('chat').appendChild(message)
     document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight
 }
 
-ws.onclose = event => {
+wsChat.onclose = event => {
     console.log(event)
 }
+
+// wsLogin.onmessage = username => {
+//     const listElement = document.createElement('li')
+//     const user = document.createElement('h3')
+//     user.setAttribute('class', username)
+//     listElement.appendChild(user)
+//     document.getElementById('users-list').appendChild(listElement)
+// }
 
 [...document.getElementsByClassName('date')].forEach(element => element.innerHTML = new Date(element.innerHTML).toLocaleString('en-GB'))
 
