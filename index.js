@@ -10,8 +10,6 @@ const mongoose = require('mongoose')
 const Message = require('./models').Message
 const User = require('./models').User
 const MongoStore = require('connect-mongo')(session)
-const EventEmitter =  require('events').EventEmitter
-const emmiter = new EventEmitter()
 
 const app = express()
 const expressWs = require('express-ws')(app)
@@ -31,14 +29,14 @@ app.use(session({
     secret: 'chatting',
     resave: true,
     saveUninitialized: true,
-    cookie:{
-        maxAge: 60 * 60 * 1000,
-    },
+    // cookie:{
+    //     maxAge: 60 * 60 * 1000,
+    // },
     store: new MongoStore({
         mongooseConnection: db,
-        autoRemove: 'interval',     
-        autoRemoveInterval: 1,
-        }),
+        ttl: 60,
+        autoRemove: 'native',
+    }),
 }))
 
 
@@ -117,7 +115,7 @@ app.ws('/chat', (ws, req) => {
         }
         Message.create(data, (err, message) => {
             const clients = expressWs.getWss('/chat').clients
-            Message.archiveAfter(message, 60000)
+            Message.archiveAfter(message, 15000)
             clients.forEach(client =>{ 
                 data.current = client === ws
                 client.send(JSON.stringify(data))
