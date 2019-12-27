@@ -34,7 +34,7 @@ app.use(session({
     // },
     store: new MongoStore({
         mongooseConnection: db,
-        ttl: 60,
+        ttl: 1,
         autoRemove: 'native',
     }),
 }))
