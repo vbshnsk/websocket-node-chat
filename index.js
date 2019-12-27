@@ -34,8 +34,9 @@ app.use(session({
     // },
     store: new MongoStore({
         mongooseConnection: db,
-        ttl: 1,
-        autoRemove: 'native',
+        ttl: 60 ,
+        autoRemove: 'interval',
+        autoRemoveInterval: 1,
     }),
 }))
 
@@ -65,7 +66,6 @@ app.post('/', (req, res) => {
             if(err)
                 res.redirect('/')
             else {
-                emmiter.emit('loggedIn', user.username)
                 req.session.username = user.username
                 res.redirect('/chat')
             }
