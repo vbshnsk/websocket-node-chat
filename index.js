@@ -21,17 +21,16 @@ app.use(bodyparser.urlencoded({
   }))
 
 
-//mongoose.connect('mongodb://localhost:27017/chat', {useNewUrlParser: true})
-mongoose.connect('mongodb+srv://vlad:212121121989gasp@cluster0-lo97k.mongodb.net/chat?retryWrites=true&w=majority', {useNewUrlParser: true})
+mongoose.connect('mongodb://localhost:27017/chat', {useNewUrlParser: true})
 const db = mongoose.connection
 
 app.use(session({
     secret: 'chatting',
     resave: true,
     saveUninitialized: true,
-    // cookie:{
-    //     maxAge: 60 * 60 * 1000,
-    // },
+    cookie:{
+        maxAge: 60 * 60 * 1000,
+    },
     store: new MongoStore({
         mongooseConnection: db,
         ttl: 60 ,
