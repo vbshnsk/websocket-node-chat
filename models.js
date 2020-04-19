@@ -29,13 +29,9 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
-MessageSchema.statics.archiveAfter = (message, time) => { 
-    console.log(1)  
+MessageSchema.statics.archiveAfter = (message, time) => {  
     setTimeout(() => {
-        console.log(2) 
-        Message.updateOne(message, { archived: true }, () =>{
-            console.log(3)
-        })
+        Message.updateOne(message, { archived: true })
 }, time)
 }
 
